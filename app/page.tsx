@@ -43,7 +43,7 @@ export default function Home() {
   });
 
   const getData = async (query: any = {}) => {
-    let link = 'http://localhost:4000?';
+    let link = 'https://shl-backend-gz2y.onrender.com?';
 
     if (query.projectTechnologies) {
       link = link + `projectTechnologies=${query.projectTechnologies}&`;
