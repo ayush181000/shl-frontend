@@ -2,15 +2,33 @@
 
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import * as z from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
 
+import { cn } from '@/lib/utils';
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover';
-import { cn } from '@/lib/utils';
+
+const formSchema = z.object({
+  projectTitle: z.string().optional(),
+  projectTechnologies: z.string().optional(),
+  technicalSkillsetFrontend: z.string().optional(),
+  technicalSkillsetBackend: z.string().optional(),
+  technicalSkillsetDatabases: z.string().optional(),
+  technicalSkillsetInfrastructre: z.string().optional(),
+  otherInformationAvailability: z.string().optional(),
+});
 
 export default function Home() {
   const [data, setData] = useState([]);
@@ -18,10 +36,59 @@ export default function Home() {
 
   useEffect(() => {
     getData();
+  }, []);
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      projectTitle: '',
+      projectTechnologies: '',
+      technicalSkillsetFrontend: '',
+      technicalSkillsetBackend: '',
+      technicalSkillsetDatabases: '',
+      technicalSkillsetInfrastructre: '',
+      otherInformationAvailability: '',
+    },
   });
 
-  const getData = async () => {
-    const res = await axios.get('http://localhost:4000');
+  const getData = async (query: any = {}) => {
+    let link = 'http://localhost:4000?';
+
+    if (query.projectTechnologies !== '') {
+      link = link + `projectTechnologies=${query.projectTechnologies}&`;
+    }
+
+    if (query.technicalSkillsetFrontend !== '') {
+      link =
+        link + `technicalSkillsetFrontend=${query.technicalSkillsetFrontend}&`;
+    }
+
+    if (query.technicalSkillsetBackend !== '') {
+      link =
+        link + `technicalSkillsetBackend=${query.technicalSkillsetBackend}&`;
+    }
+
+    if (query.technicalSkillsetDatabases !== '') {
+      link =
+        link +
+        `technicalSkillsetDatabases=${query.technicalSkillsetDatabases}&`;
+    }
+
+    if (query.technicalSkillsetInfrastructre !== '') {
+      link =
+        link +
+        `technicalSkillsetInfrastructre=${query.technicalSkillsetInfrastructre}&`;
+    }
+
+    if (query.otherInformationAvailability !== '') {
+      link =
+        link +
+        `otherInformationAvailability=${query.otherInformationAvailability}&`;
+    }
+
+    console.log(link);
+
+    const res = await axios.get(link);
     setData(res.data);
   };
 
@@ -29,9 +96,133 @@ export default function Home() {
     setSelectedCard(entry);
   };
 
+  function onSubmit(values: z.infer<typeof formSchema>) {
+    console.log(values);
+    getData(values);
+  }
+
   return (
     <div className='flex'>
       <div className='flex-1'>
+        <div className='mx-4 my-2'>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)}>
+              <div className='flex gap-x-4 text-xs'>
+                <FormField
+                  control={form.control}
+                  name='projectTitle'
+                  render={({ field }) => (
+                    <FormItem className='grow'>
+                      <FormLabel className='text-xs'>Project Title</FormLabel>
+                      <FormControl>
+                        <Input {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name='projectTechnologies'
+                  render={({ field }) => (
+                    <FormItem className='grow'>
+                      <FormLabel className='text-xs'>
+                        Project Technologies
+                      </FormLabel>
+                      <FormControl>
+                        <Input {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <div className='flex gap-x-4 text-sm'>
+                <FormField
+                  control={form.control}
+                  name='technicalSkillsetFrontend'
+                  render={({ field }) => (
+                    <FormItem className='grow'>
+                      <FormLabel className='text-xs'>
+                        Technical Skillset Frontend
+                      </FormLabel>
+                      <FormControl>
+                        <Input {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name='technicalSkillsetBackend'
+                  render={({ field }) => (
+                    <FormItem className='grow'>
+                      <FormLabel className='text-xs'>
+                        Technical Skillset Backend
+                      </FormLabel>
+                      <FormControl>
+                        <Input {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <div className='flex gap-x-4 text-sm'>
+                <FormField
+                  control={form.control}
+                  name='technicalSkillsetDatabases'
+                  render={({ field }) => (
+                    <FormItem className='grow'>
+                      <FormLabel className='text-xs'>
+                        Technical Skillset Databases
+                      </FormLabel>
+                      <FormControl>
+                        <Input {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name='technicalSkillsetInfrastructre'
+                  render={({ field }) => (
+                    <FormItem className='grow'>
+                      <FormLabel className='text-xs'>
+                        Technical Skillset Infrastructre
+                      </FormLabel>
+                      <FormControl>
+                        <Input {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <FormField
+                control={form.control}
+                name='otherInformationAvailability'
+                render={({ field }) => (
+                  <FormItem className='grow'>
+                    <FormLabel className='text-xs'>
+                      Other Information Availability
+                    </FormLabel>
+                    <FormControl>
+                      <Input {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <Button className='my-4 ml-auto justify-center' type='submit'>
+                Submit
+              </Button>
+            </form>
+          </Form>
+        </div>
         <div className='flex gap-x-3 gap-y-3 flex-wrap mx-2 my-3 justify-center'>
           {data.length > 0 &&
             data.map((entry: any) => {
