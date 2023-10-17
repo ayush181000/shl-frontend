@@ -40,47 +40,38 @@ export default function Home() {
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      projectTitle: '',
-      projectTechnologies: '',
-      technicalSkillsetFrontend: '',
-      technicalSkillsetBackend: '',
-      technicalSkillsetDatabases: '',
-      technicalSkillsetInfrastructre: '',
-      otherInformationAvailability: '',
-    },
   });
 
   const getData = async (query: any = {}) => {
     let link = 'http://localhost:4000?';
 
-    if (query.projectTechnologies !== '') {
+    if (query.projectTechnologies) {
       link = link + `projectTechnologies=${query.projectTechnologies}&`;
     }
 
-    if (query.technicalSkillsetFrontend !== '') {
+    if (query.technicalSkillsetFrontend) {
       link =
         link + `technicalSkillsetFrontend=${query.technicalSkillsetFrontend}&`;
     }
 
-    if (query.technicalSkillsetBackend !== '') {
+    if (query.technicalSkillsetBackend) {
       link =
         link + `technicalSkillsetBackend=${query.technicalSkillsetBackend}&`;
     }
 
-    if (query.technicalSkillsetDatabases !== '') {
+    if (query.technicalSkillsetDatabases) {
       link =
         link +
         `technicalSkillsetDatabases=${query.technicalSkillsetDatabases}&`;
     }
 
-    if (query.technicalSkillsetInfrastructre !== '') {
+    if (query.technicalSkillsetInfrastructre) {
       link =
         link +
         `technicalSkillsetInfrastructre=${query.technicalSkillsetInfrastructre}&`;
     }
 
-    if (query.otherInformationAvailability !== '') {
+    if (query.otherInformationAvailability) {
       link =
         link +
         `otherInformationAvailability=${query.otherInformationAvailability}&`;
