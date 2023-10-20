@@ -10,7 +10,6 @@ import { cn } from '@/lib/utils';
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -21,6 +20,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 
 const formSchema = z.object({
+  smartSearch: z.string().optional(),
   projectTitle: z.string().optional(),
   projectTechnologies: z.string().optional(),
   technicalSkillsetFrontend: z.string().optional(),
@@ -44,6 +44,15 @@ export default function Home() {
 
   const getData = async (query: any = {}) => {
     let link = 'https://shl-backend-gz2y.onrender.com?';
+    // let link = 'http://localhost:4000?';
+
+    if (query.smartSearch) {
+      link = link + `smartSearch=${query.smartSearch}&`;
+    }
+
+    if (query.projectTitle) {
+      link = link + `projectTitle=${query.projectTitle}`;
+    }
 
     if (query.projectTechnologies) {
       link = link + `projectTechnologies=${query.projectTechnologies}&`;
@@ -80,7 +89,8 @@ export default function Home() {
     console.log(link);
 
     const res = await axios.get(link);
-    setData(res.data);
+    // console.log(res.data.data);
+    setData(res.data.data);
   };
 
   const setCard = (entry: any) => {
@@ -98,6 +108,19 @@ export default function Home() {
         <div className='mx-4 my-2'>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)}>
+              <FormField
+                control={form.control}
+                name='smartSearch'
+                render={({ field }) => (
+                  <FormItem className='grow'>
+                    <FormLabel className='text-xs'>Smart Search</FormLabel>
+                    <FormControl>
+                      <Input {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
               <div className='flex gap-x-4 text-xs'>
                 <FormField
                   control={form.control}
@@ -224,36 +247,36 @@ export default function Home() {
                       <div className='my-3'>
                         <p className='text-slate-500'>Title</p>
                         <p className='font-bold text-sm text-slate-600'>
-                          {entry.projectTitle}
+                          {entry.name}
                         </p>
                       </div>
                       <div className='my-2'>
                         <p className='text-slate-500'>Project.Technologies</p>
-                        <p>{entry.projectTechnologies || '—'}</p>
+                        <p>{entry.technologies || '—'}</p>
                       </div>
                       <div className='my-2'>
                         <p className='text-slate-500'>
                           Technical_Skillset.Frontend
                         </p>
-                        <p>{entry.technicalSkillsetFrontend || '—'}</p>
+                        <p>{entry.frontend || '—'}</p>
                       </div>
                       <div className='my-2'>
                         <p className='text-slate-500'>
                           Technical_Skillset.Backend
                         </p>
-                        <p>{entry.technicalSkillsetBackend || '—'}</p>
+                        <p>{entry.backend || '—'}</p>
                       </div>
                       <div className='my-2'>
                         <p className='text-slate-500'>
                           Technical_Skillset.Databases
                         </p>
-                        <p>{entry.technicalSkillsetDatabases || '—'}</p>
+                        <p>{entry.databases || '—'}</p>
                       </div>
                       <div className='my-2'>
                         <p className='text-slate-500'>
                           Technical_Skillset.Infrastructure
                         </p>
-                        <p>{entry.technicalSkillsetInfrastructre || '—'}</p>
+                        <p>{entry.infrastructre || '—'}</p>
                       </div>
                     </CardContent>
                   </Card>
@@ -280,49 +303,49 @@ export default function Home() {
               X
             </Button>
             <div className='flex flex-col gap-y-4'>
-              <p className='font-semibold'>{selectedCard.projectTitle}</p>
+              <p className='font-semibold'>{selectedCard.name}</p>
               <br />
               <div>
                 <p className='text-sm font-light'>Project.Title</p>
-                <p>{selectedCard.projectTitle || '—'}</p>
+                <p>{selectedCard.name || '—'}</p>
               </div>
 
               <div>
                 <p className='text-sm font-light'>Project.Technologies</p>
-                <p>{selectedCard.projectTechnologies || '—'}</p>
+                <p>{selectedCard.technologies || '—'}</p>
               </div>
 
               <div>
                 <p className='text-sm font-light'>
                   Technical_Skillset.Frontend
                 </p>
-                <p>{selectedCard.technicalSkillsetFrontend || '—'}</p>
+                <p>{selectedCard.frontend || '—'}</p>
               </div>
 
               <div>
                 <p className='text-sm font-light'>Technical_Skillset.Backend</p>
-                <p>{selectedCard.technicalSkillsetBackend || '—'}</p>
+                <p>{selectedCard.backend || '—'}</p>
               </div>
 
               <div>
                 <p className='text-sm font-light'>
                   Technical_Skillset.Databases
                 </p>
-                <p>{selectedCard.technicalSkillsetDatabases || '—'}</p>
+                <p>{selectedCard.databases || '—'}</p>
               </div>
 
               <div>
                 <p className='text-sm font-light'>
                   Technical_Skillset.Infrastructure
                 </p>
-                <p>{selectedCard.technicalSkillsetInfrastructre || '—'}</p>
+                <p>{selectedCard.infrastructre || '—'}</p>
               </div>
 
               <div>
                 <p className='text-sm font-light'>
                   Other_Information.Availability
                 </p>
-                <p>{selectedCard.otherInformationAvailability || '—'}</p>
+                <p>{selectedCard.availability || '—'}</p>
               </div>
             </div>
           </div>
