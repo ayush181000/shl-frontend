@@ -10,6 +10,7 @@ import { cn } from '@/lib/utils';
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -33,6 +34,7 @@ const formSchema = z.object({
 export default function Home() {
   const [data, setData] = useState([]);
   const [selectedCard, setSelectedCard] = useState<any | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     getData();
@@ -43,54 +45,62 @@ export default function Home() {
   });
 
   const getData = async (query: any = {}) => {
-    let link = 'https://shl-backend-gz2y.onrender.com?';
-    // let link = 'http://localhost:4000?';
+    setLoading(true);
+    try {
+      let link = 'https://shl-backend-gz2y.onrender.com?';
+      // let link = 'http://localhost:4000?';
 
-    if (query.smartSearch) {
-      link = link + `smartSearch=${query.smartSearch}&`;
+      if (query.smartSearch) {
+        link = link + `smartSearch=${query.smartSearch}&`;
+      }
+
+      if (query.projectTitle) {
+        link = link + `projectTitle=${query.projectTitle}`;
+      }
+
+      if (query.projectTechnologies) {
+        link = link + `projectTechnologies=${query.projectTechnologies}&`;
+      }
+
+      if (query.technicalSkillsetFrontend) {
+        link =
+          link +
+          `technicalSkillsetFrontend=${query.technicalSkillsetFrontend}&`;
+      }
+
+      if (query.technicalSkillsetBackend) {
+        link =
+          link + `technicalSkillsetBackend=${query.technicalSkillsetBackend}&`;
+      }
+
+      if (query.technicalSkillsetDatabases) {
+        link =
+          link +
+          `technicalSkillsetDatabases=${query.technicalSkillsetDatabases}&`;
+      }
+
+      if (query.technicalSkillsetInfrastructre) {
+        link =
+          link +
+          `technicalSkillsetInfrastructre=${query.technicalSkillsetInfrastructre}&`;
+      }
+
+      if (query.otherInformationAvailability) {
+        link =
+          link +
+          `otherInformationAvailability=${query.otherInformationAvailability}&`;
+      }
+
+      console.log(link);
+
+      const res = await axios.get(link);
+      // console.log(res.data.data);
+      setData(res.data.data);
+    } catch (error: any) {
+      alert(error.message);
+    } finally {
+      setLoading(false);
     }
-
-    if (query.projectTitle) {
-      link = link + `projectTitle=${query.projectTitle}`;
-    }
-
-    if (query.projectTechnologies) {
-      link = link + `projectTechnologies=${query.projectTechnologies}&`;
-    }
-
-    if (query.technicalSkillsetFrontend) {
-      link =
-        link + `technicalSkillsetFrontend=${query.technicalSkillsetFrontend}&`;
-    }
-
-    if (query.technicalSkillsetBackend) {
-      link =
-        link + `technicalSkillsetBackend=${query.technicalSkillsetBackend}&`;
-    }
-
-    if (query.technicalSkillsetDatabases) {
-      link =
-        link +
-        `technicalSkillsetDatabases=${query.technicalSkillsetDatabases}&`;
-    }
-
-    if (query.technicalSkillsetInfrastructre) {
-      link =
-        link +
-        `technicalSkillsetInfrastructre=${query.technicalSkillsetInfrastructre}&`;
-    }
-
-    if (query.otherInformationAvailability) {
-      link =
-        link +
-        `otherInformationAvailability=${query.otherInformationAvailability}&`;
-    }
-
-    console.log(link);
-
-    const res = await axios.get(link);
-    // console.log(res.data.data);
-    setData(res.data.data);
   };
 
   const setCard = (entry: any) => {
@@ -112,10 +122,13 @@ export default function Home() {
                 control={form.control}
                 name='smartSearch'
                 render={({ field }) => (
-                  <FormItem className='grow'>
+                  <FormItem className='grow my-2'>
                     <FormLabel className='text-xs'>Smart Search</FormLabel>
                     <FormControl>
-                      <Input {...field} />
+                      <FormDescription>
+                        <Input {...field} disabled={loading} />
+                        Only smart search OR other search will work for now.
+                      </FormDescription>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -129,7 +142,7 @@ export default function Home() {
                     <FormItem className='grow'>
                       <FormLabel className='text-xs'>Project Title</FormLabel>
                       <FormControl>
-                        <Input {...field} />
+                        <Input {...field} disabled={loading} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -144,7 +157,7 @@ export default function Home() {
                         Project Technologies
                       </FormLabel>
                       <FormControl>
-                        <Input {...field} />
+                        <Input {...field} disabled={loading} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -161,7 +174,7 @@ export default function Home() {
                         Technical Skillset Frontend
                       </FormLabel>
                       <FormControl>
-                        <Input {...field} />
+                        <Input {...field} disabled={loading} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -176,7 +189,7 @@ export default function Home() {
                         Technical Skillset Backend
                       </FormLabel>
                       <FormControl>
-                        <Input {...field} />
+                        <Input {...field} disabled={loading} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -193,7 +206,7 @@ export default function Home() {
                         Technical Skillset Databases
                       </FormLabel>
                       <FormControl>
-                        <Input {...field} />
+                        <Input {...field} disabled={loading} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -208,7 +221,7 @@ export default function Home() {
                         Technical Skillset Infrastructre
                       </FormLabel>
                       <FormControl>
-                        <Input {...field} />
+                        <Input {...field} disabled={loading} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -224,68 +237,82 @@ export default function Home() {
                       Other Information Availability
                     </FormLabel>
                     <FormControl>
-                      <Input {...field} />
+                      <Input {...field} disabled={loading} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
 
-              <Button className='my-4 ml-auto justify-center' type='submit'>
+              <Button
+                className='my-4 ml-auto justify-center'
+                type='submit'
+                disabled={loading}
+              >
                 Submit
               </Button>
             </form>
           </Form>
         </div>
-        <div className='flex gap-x-3 gap-y-3 flex-wrap mx-2 my-3 justify-center'>
-          {data.length > 0 &&
-            data.map((entry: any) => {
-              return (
-                <>
-                  <Card className='w-60' onClick={() => setCard(entry)}>
-                    <CardContent className='text-xs text-left'>
-                      <div className='my-3'>
-                        <p className='text-slate-500'>Title</p>
-                        <p className='font-bold text-sm text-slate-600'>
-                          {entry.name}
-                        </p>
-                      </div>
-                      <div className='my-2'>
-                        <p className='text-slate-500'>Project.Technologies</p>
-                        <p>{entry.technologies || '—'}</p>
-                      </div>
-                      <div className='my-2'>
-                        <p className='text-slate-500'>
-                          Technical_Skillset.Frontend
-                        </p>
-                        <p>{entry.frontend || '—'}</p>
-                      </div>
-                      <div className='my-2'>
-                        <p className='text-slate-500'>
-                          Technical_Skillset.Backend
-                        </p>
-                        <p>{entry.backend || '—'}</p>
-                      </div>
-                      <div className='my-2'>
-                        <p className='text-slate-500'>
-                          Technical_Skillset.Databases
-                        </p>
-                        <p>{entry.databases || '—'}</p>
-                      </div>
-                      <div className='my-2'>
-                        <p className='text-slate-500'>
-                          Technical_Skillset.Infrastructure
-                        </p>
-                        <p>{entry.infrastructre || '—'}</p>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </>
-              );
-            })}
-        </div>
+        {loading ? (
+          <div className='center'>
+            <div className='lds-ring'>
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+            </div>
+          </div>
+        ) : (
+          <div className='flex gap-x-3 gap-y-3 flex-wrap mx-2 my-3 justify-center'>
+            {data.length > 0 &&
+              data.map((entry: any) => {
+                return (
+                  <>
+                    <Card className='w-60' onClick={() => setCard(entry)}>
+                      <CardContent className='text-xs text-left'>
+                        <div className='my-3'>
+                          <p className='text-slate-500'>Title</p>
+                          <p className='font-bold text-sm text-slate-600'>
+                            {entry.name}
+                          </p>
+                        </div>
+                        <div className='my-2'>
+                          <p className='text-slate-500'>Project.Technologies</p>
+                          <p>{entry.technologies || '—'}</p>
+                        </div>
+                        <div className='my-2'>
+                          <p className='text-slate-500'>
+                            Technical_Skillset.Frontend
+                          </p>
+                          <p>{entry.frontend || '—'}</p>
+                        </div>
+                        <div className='my-2'>
+                          <p className='text-slate-500'>
+                            Technical_Skillset.Backend
+                          </p>
+                          <p>{entry.backend || '—'}</p>
+                        </div>
+                        <div className='my-2'>
+                          <p className='text-slate-500'>
+                            Technical_Skillset.Databases
+                          </p>
+                          <p>{entry.databases || '—'}</p>
+                        </div>
+                        <div className='my-2'>
+                          <p className='text-slate-500'>
+                            Technical_Skillset.Infrastructure
+                          </p>
+                          <p>{entry.infrastructre || '—'}</p>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </>
+                );
+              })}
+          </div>
+        )}
       </div>
-
       <div
         className={cn(
           selectedCard ? '' : 'hidden',
